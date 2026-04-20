@@ -9,11 +9,12 @@ app.use(express.static('public'))
 
 app.use("/movies", moviesRouter)
 
+app.use(notFound)
+
+app.use(errorHandler)
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
-app.use(notFound)
-
-app.use(errorHandler)
