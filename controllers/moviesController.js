@@ -27,11 +27,7 @@ const show = (req, res) => {
 
     const movieSql = `SELECT * FROM movies WHERE id=?`
 
-    const reviewSql = `
-    SELECT * 
-    FROM reviews
-    JOIN movies ON movies.id = reviews.movie_id
-    WHERE reviews.movie_id=?`
+    const reviewSql = `SELECT * FROM reviews WHERE movie_id = ?`
 
     connection.query(movieSql, [id], (err, movieResults) => {
 
