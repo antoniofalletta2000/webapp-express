@@ -4,7 +4,9 @@ const port = 3000
 const moviesRouter = require("./routes/moviesRoute")
 const errorHandler = require ("./middlewares/errorHandler")
 const notFound = require ("./middlewares/notFound")
+const cors = require("cors")
 
+app.use(cors())
 app.use(express.static('public'))
 
 app.use("/movies", moviesRouter)
