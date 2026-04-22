@@ -4,11 +4,11 @@ const { json } = require("body-parser")
 
 //index
 const index = (req, res) => {
-    
+
     const sql = `SELECT * FROM movies`
 
     connection.query(sql, (err, results) => {
-        
+
         if (err) return res.status(500).json({
             error: true,
             message: "Database error"
@@ -25,9 +25,11 @@ const show = (req, res) => {
 
     const { id } = req.params
 
-    const movieSql = `SELECT * FROM movies WHERE id=?`
+    const movieSql = `SELECT * FROM movies WHERE id = ?`
 
     const reviewSql = `SELECT * FROM reviews WHERE movie_id = ?`
+
+    const averageVoteSql = `SELECT AVG(vote) as movie_vote FROM reviews WHERE movie_id = ?`
 
     connection.query(movieSql, [id], (err, movieResults) => {
 
@@ -56,6 +58,20 @@ const show = (req, res) => {
             })
 
             movie.reviews = reviewResults
+        })
+
+        connection.query(averageVoteSql, [id], (err, voteAverageResults)=>{
+            if (err) return res.status(500).json({
+                error: true,
+                message: "Database error"
+            })
+
+            if (voteAverageResults.length === 0) return res.status(404).json({
+                error: true,
+                message: "Movie Not Found"
+            })
+
+            movie.average_vote = voteAverageResults
 
             res.json(movie)
         })
