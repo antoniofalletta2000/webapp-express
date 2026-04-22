@@ -71,7 +71,7 @@ const show = (req, res) => {
                 message: "Movie Not Found"
             })
 
-            movie.average_vote = voteAverageResults
+            movie.average_vote = voteAverageResults[0].movie_vote
 
             res.json(movie)
         })
