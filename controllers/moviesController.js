@@ -84,6 +84,11 @@ const storeReview = (req, res) => {
     const movieId = Number(req.params.id)
     const { name, vote, text } = req.body
 
+    if(!name || !vote || !text) return res.status(400).json({
+        error: true,
+        message: "Missing required fields"
+    })
+
     const sql = `INSERT INTO reviews (movie_id, name, vote, text) VALUES (?, ?, ?, ?)`
 
     connection.query(sql, [movieId, name, vote, text], (err, results) => {
@@ -91,11 +96,6 @@ const storeReview = (req, res) => {
         if (err) return res.status(500).json({
             error: true,
             message: "Database error"
-        })
-
-        if(results.affectedRows === 0) return res.status(400).json({
-            error: true,
-            message: "Review not added"
         })
 
         res.status(201).json({
