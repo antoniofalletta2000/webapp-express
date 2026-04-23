@@ -107,8 +107,38 @@ const storeReview = (req, res) => {
 
 }
 
+const storeMovie = (req, res) => {
+
+    const { title, director, genre, image } = req.body
+
+    if(!title || !director || !genre || !image) return res.status(400).json({
+        error: true,
+        message: "Missing required fields"
+    })
+
+    const sql = `INSERT INTO movies (title, director, genre, image) VALUES (?, ?, ?, ?)`
+
+    connection.query(sql, [ title, director, genre, image], (err, results) => {
+
+        if (err) return res.status(500).json({
+            error: true,
+            message: "Database error"
+        })
+
+        res.status(201).json({
+            error: false,
+            message: "Movie added successfully"
+        })
+
+    })
+
+}
+
+
+
 module.exports = {
     index,
     show,
-    storeReview
+    storeReview,
+    storeMovie
 }
