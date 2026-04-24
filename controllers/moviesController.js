@@ -58,22 +58,24 @@ const show = (req, res) => {
             })
 
             movie.reviews = reviewResults
-        })
 
-        connection.query(averageVoteSql, [id], (err, voteAverageResults) => {
-            if (err) return res.status(500).json({
-                error: true,
-                message: "Database error"
+            connection.query(averageVoteSql, [id], (err, voteAverageResults) => {
+                if (err) return res.status(500).json({
+                    error: true,
+                    message: "Database error"
+                })
+
+                if (voteAverageResults.length === 0) return res.status(404).json({
+                    error: true,
+                    message: "Movie Not Found"
+                })
+
+                movie.average_vote = voteAverageResults[0].movie_vote
+
+                res.json(movie)
             })
 
-            if (voteAverageResults.length === 0) return res.status(404).json({
-                error: true,
-                message: "Movie Not Found"
-            })
 
-            movie.average_vote = voteAverageResults[0].movie_vote
-
-            res.json(movie)
         })
 
     })
@@ -120,17 +122,19 @@ const storeMovie = (req, res) => {
         message: "Missing required fields"
     })
 
-    
+
 
 
     const sql = `INSERT INTO movies (title, director, genre, image) VALUES (?, ?, ?, ?)`
 
     connection.query(sql, [title, director, genre, image], (err, results) => {
 
-        if (err) return res.status(500).json({
-            error: true,
-            message: "Database error"
-        })
+        if (err) {
+            return res.status(500).json({
+                error: true,
+                message: "Database error"
+            })
+        }
 
         res.status(201).json({
             error: false,
