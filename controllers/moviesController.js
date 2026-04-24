@@ -60,7 +60,7 @@ const show = (req, res) => {
             movie.reviews = reviewResults
         })
 
-        connection.query(averageVoteSql, [id], (err, voteAverageResults)=>{
+        connection.query(averageVoteSql, [id], (err, voteAverageResults) => {
             if (err) return res.status(500).json({
                 error: true,
                 message: "Database error"
@@ -84,7 +84,7 @@ const storeReview = (req, res) => {
     const movieId = Number(req.params.id)
     const { name, vote, text } = req.body
 
-    if(!name || !vote || !text) return res.status(400).json({
+    if (!name || !vote || !text) return res.status(400).json({
         error: true,
         message: "Missing required fields"
     })
@@ -109,16 +109,20 @@ const storeReview = (req, res) => {
 
 const storeMovie = (req, res) => {
 
-    const { title, director, genre, image } = req.body
+    const { title, director, genre } = req.body
 
-    if(!title || !director || !genre || !image) return res.status(400).json({
+    const image = req.file ? `http://localhost:3000/${req.file.filename}` : null
+
+    if (!title || !director || !genre) return res.status(400).json({
         error: true,
         message: "Missing required fields"
     })
 
+
+
     const sql = `INSERT INTO movies (title, director, genre, image) VALUES (?, ?, ?, ?)`
 
-    connection.query(sql, [ title, director, genre, image], (err, results) => {
+    connection.query(sql, [title, director, genre, image], (err, results) => {
 
         if (err) return res.status(500).json({
             error: true,

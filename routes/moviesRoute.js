@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const moviesController = require("../controllers/moviesController")
-
+const upload = require("../middlewares/fileUpload")
 //index
 router.get('/', moviesController.index)
 
@@ -12,6 +12,6 @@ router.get('/:id', moviesController.show)
 router.post('/:id/review', moviesController.storeReview)
 
 //storeMovie
-router.post('/admin', moviesController.storeMovie)
+router.post('/admin', upload.single('image'), moviesController.storeMovie)
 
 module.exports = router
