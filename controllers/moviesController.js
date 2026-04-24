@@ -111,13 +111,16 @@ const storeMovie = (req, res) => {
 
     const { title, director, genre } = req.body
 
-    const image = req.file ? `http://localhost:3000/${req.file.filename}` : null
+    const image = req.file ? req.file.filename : null
+
+    console.log(title, director, genre, image)
 
     if (!title || !director || !genre) return res.status(400).json({
         error: true,
         message: "Missing required fields"
     })
 
+    
 
 
     const sql = `INSERT INTO movies (title, director, genre, image) VALUES (?, ?, ?, ?)`
