@@ -32,16 +32,18 @@ const show = (req, res) => {
     const averageVoteSql = `SELECT AVG(vote) as movie_vote FROM reviews WHERE movie_id = ?`
 
     connection.query(movieSql, [id], (err, movieResults) => {
-
+        console.log(movieResults)
         if (err) return res.status(500).json({
             error: true,
             message: "Database error"
         })
-
+        
         if (movieResults.length === 0) return res.status(404).json({
             error: true,
             message: "Movie Not Found"
         })
+
+        console.log(movieResults.length)
 
         const movie = movieResults[0]
 
@@ -50,11 +52,6 @@ const show = (req, res) => {
             if (err) return res.status(500).json({
                 error: true,
                 message: "Database error"
-            })
-
-            if (reviewResults.length === 0) return res.status(404).json({
-                error: true,
-                message: "Movie Not Found"
             })
 
             movie.reviews = reviewResults
